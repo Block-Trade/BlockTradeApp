@@ -21,7 +21,7 @@ class _MyTradeState extends State<MyTrade> {
         title: Text('My Trade',style: TextStyle(color: Colors.white,fontFamily: 'OpenSansSemi'),),
         backgroundColor: primaryColor,
       ),
-      drawer: SideNavDrawer(2),
+      drawer: SideNavDrawer(a: 2,),
     );
   }
 }

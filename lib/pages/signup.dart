@@ -22,11 +22,10 @@ class _SignUpState extends State<SignUp> {
   String password;
   String username;
   String mobileNo;
-  String cc='91';
   String mno;
 
   makeRequest()async{
-    mobileNo=cc+mno;
+    mobileNo=mno;
     String params = '{"name":"${name.trim()}","email":"$email","username":"${username.trim()}","password":"${password.trim()}","mobileNo":"${mobileNo.trim()}"}';
     http.Response response = await http.post(signUpUrl, headers: {
       "Content-Type": "application/json",
@@ -162,50 +161,28 @@ class _SignUpState extends State<SignUp> {
                 ),
                 Padding(
                   padding: const EdgeInsets.only(left: 20,right: 20,top: 10,bottom: 10),
-                  child: Row(
-                    children: [
-                      CountryCodePicker(
-                        onChanged: (val){
-                          setState(() {
-                            cc=val.code;
-                          });
-                        },
-                        // Initial selection and favorite can be one of code ('IT') OR dial_code('+39')
-                        initialSelection: 'IN',
-                        favorite: ['+91','FR'],
-                        // optional. Shows only country name and flag
-                        showCountryOnly: false,
-                        // optional. Shows only country name and flag when popup is closed.
-                        showOnlyCountryWhenClosed: false,
-                        // optional. aligns the flag and the Text left
-                        alignLeft: false,
+                  child: Container(
+                    decoration: BoxDecoration(
+                      border: Border.all(
+                          color:primaryColor
                       ),
-                      Expanded(
-                        child: Container(
-                          decoration: BoxDecoration(
-                            border: Border.all(
-                                color:primaryColor
-                            ),
-                            borderRadius: BorderRadius.all(Radius.circular(7)),
-                          ),
-                          child: TextFormField(
-                            style: TextStyle(fontSize: 14,fontFamily: 'OpenSans',fontWeight: FontWeight.bold,color: Colors.black),
-                            onChanged: (val){
-                              setState(() {
-                                mno=val;
-                              });
-                            },
-                            keyboardType: TextInputType.number,
-                            decoration: InputDecoration(
-                                contentPadding: EdgeInsets.only(left: 10),
-                                border: InputBorder.none,
-                                hintText: 'Phone Number',
-                                hintStyle: TextStyle(fontSize: 14,fontFamily: 'OpenSans',fontWeight: FontWeight.bold,color: Colors.black)
-                            ),
-                          ),
-                        ),
+                      borderRadius: BorderRadius.all(Radius.circular(7)),
+                    ),
+                    child: TextFormField(
+                      style: TextStyle(fontSize: 14,fontFamily: 'OpenSans',fontWeight: FontWeight.bold,color: Colors.black),
+                      onChanged: (val){
+                        setState(() {
+                          mno=val;
+                        });
+                      },
+                      keyboardType: TextInputType.number,
+                      decoration: InputDecoration(
+                          contentPadding: EdgeInsets.only(left: 10),
+                          border: InputBorder.none,
+                          hintText: 'Phone Number',
+                          hintStyle: TextStyle(fontSize: 14,fontFamily: 'OpenSans',fontWeight: FontWeight.bold,color: Colors.black)
                       ),
-                    ],
+                    ),
                   ),
                 ),
                 Padding(

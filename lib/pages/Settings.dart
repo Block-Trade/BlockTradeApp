@@ -22,7 +22,7 @@ class _SettingsState extends State<Settings> {
         title: Text('Settings',style: TextStyle(color: Colors.white,fontFamily: 'OpenSansSemi'),),
         backgroundColor: primaryColor,
       ),
-      drawer: SideNavDrawer(4),
+      drawer: SideNavDrawer(a: 4,),
     );
   }
 }

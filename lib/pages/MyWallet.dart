@@ -22,7 +22,7 @@ class _MyWalletState extends State<MyWallet> {
         title: Text('Wallet',style: TextStyle(color: Colors.white,fontFamily: 'OpenSansSemi'),),
         backgroundColor: primaryColor,
       ),
-      drawer: SideNavDrawer(3),
+      drawer: SideNavDrawer(a: 3,),
     );
   }
 }

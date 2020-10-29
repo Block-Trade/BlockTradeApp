@@ -19,7 +19,7 @@ class KycVerifiedScreen extends StatelessWidget {
               padding: const EdgeInsets.only(right: 30),
               child: InkWell(
                 onTap: (){
-                  Navigator.push(context, MaterialPageRoute(builder: (BuildContext context)=>TradeDoc1()));
+                  Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (BuildContext context)=>Dashboard()), (route) => false);
                 },
                 child: Material(
                   borderRadius: BorderRadius.circular(7),

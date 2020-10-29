@@ -35,6 +35,7 @@ class _CompanyInfoState extends State<CompanyInfo> {
     print(response.body);
     if(response.statusCode==200){
       Fluttertoast.showToast(msg: 'Company Information Added',backgroundColor: Colors.black,textColor: Colors.white);
+      Navigator.push(context, MaterialPageRoute(builder: (BuildContext context)=>KycScreen()));
     }else{
       Fluttertoast.showToast(msg: 'Something went wrong',backgroundColor: Colors.black,textColor: Colors.white);
     }
@@ -93,6 +94,7 @@ class _CompanyInfoState extends State<CompanyInfo> {
                         companyEmail=val;
                       });
                     },
+                    style: TextStyle(fontSize: 14,fontFamily: 'OpenSans',fontWeight: FontWeight.bold,color: Colors.black),
                     decoration: InputDecoration(
                         contentPadding: EdgeInsets.only(left: 10),
                         border: InputBorder.none,
@@ -112,6 +114,7 @@ class _CompanyInfoState extends State<CompanyInfo> {
                     borderRadius: BorderRadius.all(Radius.circular(7)),
                   ),
                   child: TextFormField(
+                    style: TextStyle(fontSize: 14,fontFamily: 'OpenSans',fontWeight: FontWeight.bold,color: Colors.black),
                     onChanged: (val){
                       setState(() {
                         companyAddress=val;
@@ -136,6 +139,7 @@ class _CompanyInfoState extends State<CompanyInfo> {
                     borderRadius: BorderRadius.all(Radius.circular(7)),
                   ),
                   child: TextFormField(
+                    style: TextStyle(fontSize: 14,fontFamily: 'OpenSans',fontWeight: FontWeight.bold,color: Colors.black),
                     onChanged: (val){
                       setState(() {
                         companyTelNo=val;
@@ -160,6 +164,7 @@ class _CompanyInfoState extends State<CompanyInfo> {
                     borderRadius: BorderRadius.all(Radius.circular(7)),
                   ),
                   child: TextFormField(
+                    style: TextStyle(fontSize: 14,fontFamily: 'OpenSans',fontWeight: FontWeight.bold,color: Colors.black),
                     onChanged: (val){
                       setState(() {
                         city=val;
@@ -184,6 +189,7 @@ class _CompanyInfoState extends State<CompanyInfo> {
                     borderRadius: BorderRadius.all(Radius.circular(7)),
                   ),
                   child: TextFormField(
+                    style: TextStyle(fontSize: 14,fontFamily: 'OpenSans',fontWeight: FontWeight.bold,color: Colors.black),
                     onChanged: (val){
                       setState(() {
                         country=val;
@@ -202,7 +208,7 @@ class _CompanyInfoState extends State<CompanyInfo> {
                 padding: const EdgeInsets.all(8.0),
                 child: InkWell(
                   onTap: ()async{
-                    Navigator.push(context, MaterialPageRoute(builder: (BuildContext context)=>KycScreen()));
+                    await makeRequest();
                   },
                   child: Material(
                     borderRadius: BorderRadius.circular(7),
@@ -217,23 +223,10 @@ class _CompanyInfoState extends State<CompanyInfo> {
                       ),
                       child: Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 40,vertical: 10),
-                        child: Text('Sign Up',style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold,fontFamily: 'OpenSans',fontSize: 20),),
+                        child: Text('Next',style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold,fontFamily: 'OpenSans',fontSize: 20),),
                       ),
                     ),
                   ),
-                ),
-              ),
-              InkWell(
-                onTap: (){
-                  Navigator.pop(context);
-                },
-                child: Row(
-                  // crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text("Already have an account ? ",style:TextStyle(color: Colors.black,fontWeight: FontWeight.bold,fontFamily: 'OpenSans',fontSize: 12),),
-                    Text("Login",style: TextStyle(color: primaryColor,fontWeight: FontWeight.bold,fontFamily: 'OpenSans',fontSize: 12),),
-                  ],
                 ),
               ),
               SizedBox(height:20),

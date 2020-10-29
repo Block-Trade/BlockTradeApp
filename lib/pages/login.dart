@@ -3,6 +3,8 @@ import 'dart:convert';
 
 import 'package:blocktrad/konstants/API.dart';
 import 'package:blocktrad/konstants/color.dart';
+import 'package:blocktrad/pages/CompanyInfo.dart';
+import 'package:blocktrad/pages/KycScreen.dart';
 import 'package:blocktrad/pages/signup.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
@@ -35,7 +37,33 @@ class _AbcState extends State<Abc> {
   chk()async{
     bool chk=await storage.containsKey(key: 'accToken');
     if(chk){
-      Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (BuildContext context)=>Dashboard()), (route) => false);
+      String url=loginUrl;
+      String accToken=await storage.read(key: 'accToken');
+      print(accToken);
+      Map<String,String>headers={
+        "token":"$accToken"
+      };
+      http.Response response=await http.get(url,headers:headers );
+      print(response.statusCode);
+      if(response.statusCode==200){
+        var decodedResponse=jsonDecode(response.body);
+        String cName=decodedResponse['companyName'];
+        if(cName.isEmpty) {
+          Navigator.pushAndRemoveUntil(context, MaterialPageRoute(
+              builder: (BuildContext context) => CompanyInfo()), (
+              route) => false);
+        }else{
+          bool kycStatus=decodedResponse['kycStatus'];
+          if(kycStatus==true){
+            Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (BuildContext context)=>Dashboard()), (route) => false);
+          }else{
+            Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (BuildContext context)=>KycScreen()), (route) => false);
+          }
+        }
+      }else{
+        Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (BuildContext context)=>Login()), (route) => false);
+      }
+      // Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (BuildContext context)=>Dashboard()), (route) => false);
     }else{
       Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (BuildContext context)=>Login()), (route) => false);
     }
@@ -82,9 +110,31 @@ class _LoginState extends State<Login> {
    print(response.body);
     if(response.statusCode==200){
       String token=jsonDecode(response.body)['token'];
-
       await storage.write(key: 'accToken', value: token);
-      Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (BuildContext context)=>Dashboard()), (route) => false);
+      Map<String,String>headers={
+        "token":"$token"
+      };
+      http.Response response1=await http.get(loginUrl,headers:headers );
+      if(response1.statusCode==200){
+        var decodedResponse=jsonDecode(response1.body);
+        String cName=decodedResponse['companyName'];
+        print(cName);
+        if(cName.isEmpty) {
+          Navigator.pushAndRemoveUntil(context, MaterialPageRoute(
+              builder: (BuildContext context) => CompanyInfo()), (
+              route) => false);
+        }else{
+          bool kycStatus=decodedResponse['kycStatus'];
+          if(kycStatus==true){
+            Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (BuildContext context)=>Dashboard()), (route) => false);
+          }else{
+            Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (BuildContext context)=>KycScreen()), (route) => false);
+          }
+        }
+      }else{
+        Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (BuildContext context)=>Login()), (route) => false);
+      }
+      // Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (BuildContext context)=>Dashboard()), (route) => false);
     }
     else if(response.statusCode==400){
       String msg=jsonDecode(response.body)['msg'];

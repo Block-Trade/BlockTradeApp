@@ -9,7 +9,9 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class SideNavDrawer extends StatelessWidget {
   int a;
-  SideNavDrawer(this.a);
+  String username;
+  String name;
+  SideNavDrawer({this.a,this.name,this.username});
 
 
   @override
@@ -41,15 +43,17 @@ class SideNavDrawer extends StatelessWidget {
                   children: [
                     Image.asset('assets/images/placeholder.png'),
                     SizedBox(width: 20,),
-                    Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text('username',style: TextStyle(color: Colors.white,fontFamily: 'OpenSansSemi'),),
-                        SizedBox(height: 10,),
-                        Text('email',style: TextStyle(color: Colors.white,fontFamily: 'OpenSansSemi'),),
+                    Expanded(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(this.name,style: TextStyle(color: Colors.white,fontFamily: 'OpenSansSemi'),),
+                          SizedBox(height: 10,),
+                          Text(this.username,style: TextStyle(color: Colors.white,fontFamily: 'OpenSansSemi'),overflow: TextOverflow.ellipsis,),
 
-                      ],
+                        ],
+                      ),
                     )
                   ],
                 ),
@@ -61,7 +65,8 @@ class SideNavDrawer extends StatelessWidget {
               },
               child: Container(
                 decoration: BoxDecoration(
-                    border: a==1?Border(left: BorderSide(color: Colors.white,width: 3)):null
+                    border: a==1?Border(left: BorderSide(color: Colors.white,width: 5
+                    )):null
                 ),
                 child: ListTile(
                   title: Text('Dashboard',style: a==1?TextStyle(color: Colors.white,fontFamily: 'OpenSansSemi',fontSize: 16): TextStyle(color: Colors.white,fontFamily: 'OpenSans',fontSize: 15),),
@@ -76,7 +81,7 @@ class SideNavDrawer extends StatelessWidget {
               },
               child: Container(
                 decoration: BoxDecoration(
-                    border: a==2?Border(left: BorderSide(color: Colors.white,width: 3)):null
+                    border: a==2?Border(left: BorderSide(color: Colors.white,width: 5)):null
                 ),
                 child: ListTile(
                     title: Text('My Trade',style:a==2?TextStyle(color: Colors.white,fontFamily: 'OpenSansSemi',fontSize: 16): TextStyle(color: Colors.white,fontFamily: 'OpenSans',fontSize: 15),),
@@ -91,7 +96,7 @@ class SideNavDrawer extends StatelessWidget {
               },
               child: Container(
                 decoration: BoxDecoration(
-                    border: a==3?Border(left: BorderSide(color: Colors.white,width: 3)):null
+                    border: a==3?Border(left: BorderSide(color: Colors.white,width: 5)):null
                 ),
                 child: ListTile(
                     title: Text('My Wallet',style:a==3?TextStyle(color: Colors.white,fontFamily: 'OpenSansSemi',fontSize: 16): TextStyle(color: Colors.white,fontFamily: 'OpenSans',fontSize: 15),),
@@ -105,7 +110,7 @@ class SideNavDrawer extends StatelessWidget {
               },
               child: Container(
                 decoration: BoxDecoration(
-                    border: a==4?Border(left: BorderSide(color: Colors.white,width: 3)):null
+                    border: a==4?Border(left: BorderSide(color: Colors.white,width: 5)):null
                 ),
                 child: ListTile(
                     title: Text('Settings',style: a==4?TextStyle(color: Colors.white,fontFamily: 'OpenSansSemi',fontSize: 16): TextStyle(color: Colors.white,fontFamily: 'OpenSans',fontSize: 15),),

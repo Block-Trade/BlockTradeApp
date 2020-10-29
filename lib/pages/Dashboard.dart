@@ -4,6 +4,7 @@ import 'package:blocktrad/konstants/API.dart';
 import 'package:blocktrad/konstants/color.dart';
 import 'package:blocktrad/konstants/loader.dart';
 import 'package:blocktrad/models/SideNav.dart';
+import 'package:blocktrad/pages/SearchConsignee.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
@@ -119,24 +120,29 @@ class _DashboardState extends State<Dashboard> {
                               ],
                             ),
                             SizedBox(height: 20,),
-                            Center(
-                                child: Container(
-                                  decoration: BoxDecoration(
-                                    color: primaryColor,
-                                    borderRadius: BorderRadius.circular(22),
-                                  ),
-                                  child: Padding(
-                                    padding: const EdgeInsets.symmetric(horizontal: 20,vertical: 10),
-                                    child: Text(
-                                      'Next',
-                                      style: TextStyle(
-                                          color: Colors.white,
-                                          fontFamily: 'OpenSansSemi',
-                                          fontSize: 18),
-                                      textAlign: TextAlign.center,
+                            GestureDetector(
+                              onTap: (){
+                                Navigator.push(context, MaterialPageRoute(builder: (BuildContext context)=>SearchConsignee()));
+                              },
+                              child: Center(
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                      color: primaryColor,
+                                      borderRadius: BorderRadius.circular(22),
                                     ),
-                                  ),
-                                )),
+                                    child: Padding(
+                                      padding: const EdgeInsets.symmetric(horizontal: 20,vertical: 10),
+                                      child: Text(
+                                        'Next',
+                                        style: TextStyle(
+                                            color: Colors.white,
+                                            fontFamily: 'OpenSansSemi',
+                                            fontSize: 18),
+                                        textAlign: TextAlign.center,
+                                      ),
+                                    ),
+                                  )),
+                            ),
                           ],
                         ),
                       ),
@@ -240,7 +246,9 @@ class _DashboardState extends State<Dashboard> {
                 ),
                 InkWell(
                   onTap: () {
-                    dialog();
+                    // dialog();
+                    Navigator.push(context, MaterialPageRoute(builder: (BuildContext context)=>SearchConsignee()));
+
                   },
                   child: Material(
                     // elevation: 10,

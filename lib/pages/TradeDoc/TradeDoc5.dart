@@ -1,8 +1,12 @@
+import 'dart:async';
+
 import 'package:blocktrad/konstants/color.dart';
 import 'package:currency_pickers/country.dart';
 import 'package:currency_pickers/currency_picker_dropdown.dart';
 import 'package:currency_pickers/utils/utils.dart';
 import 'package:flutter/material.dart';
+import 'package:rounded_loading_button/rounded_loading_button.dart';
+
 
 class TradeDoc5 extends StatefulWidget {
   @override
@@ -11,6 +15,16 @@ class TradeDoc5 extends StatefulWidget {
 
 class _TradeDoc5State extends State<TradeDoc5> {
 
+
+
+  final RoundedLoadingButtonController _btnController = new RoundedLoadingButtonController();
+
+
+  void _doSomething() async {
+    Timer(Duration(seconds: 3), () {
+      _btnController.success();
+    });
+  }
 
 
   Widget _buildDropdownItem(Country country) => Center(
@@ -293,34 +307,34 @@ class _TradeDoc5State extends State<TradeDoc5> {
                   ),
                 ),
               ),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Container(
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(5),
-                      border: Border.all(color: greyColor)
-                  ),
-                  child: TextFormField(
-                    decoration: InputDecoration(
-                      contentPadding: EdgeInsets.only(
-                          left: 10, top: 5),
-                      border: InputBorder.none,
-                      focusedBorder: InputBorder.none,
-                      enabledBorder: InputBorder.none,
-                      errorBorder: InputBorder.none,
-                      disabledBorder: InputBorder.none,
-                      labelText: 'Trade Total ',
-                      labelStyle: TextStyle(
-                          color: Colors.black, fontFamily: 'OpenSans'),
-                    ),
-                    style: TextStyle(
-                        color: Colors.black,
-                        fontFamily: 'OpenSans',
-                        fontSize: 14
-                    ),
-                  ),
-                ),
-              ),
+              // Padding(
+              //   padding: const EdgeInsets.all(8.0),
+              //   child: Container(
+              //     decoration: BoxDecoration(
+              //         borderRadius: BorderRadius.circular(5),
+              //         border: Border.all(color: greyColor)
+              //     ),
+              //     child: TextFormField(
+              //       decoration: InputDecoration(
+              //         contentPadding: EdgeInsets.only(
+              //             left: 10, top: 5),
+              //         border: InputBorder.none,
+              //         focusedBorder: InputBorder.none,
+              //         enabledBorder: InputBorder.none,
+              //         errorBorder: InputBorder.none,
+              //         disabledBorder: InputBorder.none,
+              //         labelText: 'Trade Total ',
+              //         labelStyle: TextStyle(
+              //             color: Colors.black, fontFamily: 'OpenSans'),
+              //       ),
+              //       style: TextStyle(
+              //           color: Colors.black,
+              //           fontFamily: 'OpenSans',
+              //           fontSize: 14
+              //       ),
+              //     ),
+              //   ),
+              // ),
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: Container(
@@ -378,30 +392,36 @@ class _TradeDoc5State extends State<TradeDoc5> {
                 ),
               ),
               Padding(
-                padding: const EdgeInsets.only(bottom: 10),
+                padding: const EdgeInsets.only(bottom: 10,top: 10,left: 50,right: 50),
                 child: Align(
                   alignment: Alignment.center,
-                  child: InkWell(
-                    onTap: ()async{
-                      Navigator.push(context, MaterialPageRoute(builder: (BuildContext context)=>TradeDoc5()));
-                    },
-                    child: Material(
-                      borderRadius: BorderRadius.circular(7),
-                      shadowColor: Color(0x40000000),
-                      child: Container(
-                        decoration: BoxDecoration(
-                          boxShadow: [
-                            BoxShadow(color: Color(0x40000000),blurRadius: 4)
-                          ],
-                          color: buttonColor,
-                          borderRadius: BorderRadius.circular(7),
-                        ),
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 30,vertical: 10),
-                          child: Text('Finish',style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold,fontFamily: 'OpenSans',fontSize: 20),),
-                        ),
-                      ),
-                    ),
+                  // child: InkWell(
+                  //   onTap: ()async{
+                  //     Navigator.push(context, MaterialPageRoute(builder: (BuildContext context)=>TradeDoc5()));
+                  //   },
+                  //   child: Material(
+                  //     borderRadius: BorderRadius.circular(7),
+                  //     shadowColor: Color(0x40000000),
+                  //     child: Container(
+                  //       decoration: BoxDecoration(
+                  //         boxShadow: [
+                  //           BoxShadow(color: Color(0x40000000),blurRadius: 4)
+                  //         ],
+                  //         color: buttonColor,
+                  //         borderRadius: BorderRadius.circular(7),
+                  //       ),
+                  //       child: Padding(
+                  //         padding: const EdgeInsets.symmetric(horizontal: 30,vertical: 10),
+                  //         child: Text('Finish',style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold,fontFamily: 'OpenSans',fontSize: 20),),
+                  //       ),
+                  //     ),
+                  //   ),
+                  // ),
+                  child: RoundedLoadingButton(
+                    color: buttonColor,
+                    child: Text('Finish', style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold,fontFamily: 'OpenSans',fontSize: 20)),
+                    controller: _btnController,
+                    onPressed: _doSomething,
                   ),
                 ),
               ),

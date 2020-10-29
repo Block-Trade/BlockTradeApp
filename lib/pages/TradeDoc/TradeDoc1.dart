@@ -1,9 +1,12 @@
+import 'dart:async';
+
 import 'package:blocktrad/konstants/color.dart';
 import 'package:blocktrad/pages/TradeDoc/TradeDoc2.dart';
 import 'package:flutter/material.dart';
 import 'package:date_range_picker/date_range_picker.dart' as DateRagePicker;
 import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
 import 'package:intl/intl.dart';
+import 'package:rounded_loading_button/rounded_loading_button.dart';
 
 class TradeDoc1 extends StatefulWidget {
 
@@ -14,6 +17,8 @@ class TradeDoc1 extends StatefulWidget {
 class _TradeDoc1State extends State<TradeDoc1> {
 
   TextEditingController _controller=TextEditingController();
+  final RoundedLoadingButtonController _btnController = new RoundedLoadingButtonController();
+
 
 
   @override
@@ -22,6 +27,12 @@ class _TradeDoc1State extends State<TradeDoc1> {
     super.initState();
   }
 
+
+  void _doSomething() async {
+    Timer(Duration(seconds: 3), () {
+      _btnController.success();
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -358,7 +369,7 @@ class _TradeDoc1State extends State<TradeDoc1> {
               ),
               SizedBox(height: 20,),
               Padding(
-                padding: const EdgeInsets.only(bottom: 10),
+                padding: const EdgeInsets.only(bottom: 10,right: 40,left: 40),
                 child: Align(
                   alignment: Alignment.bottomRight,
                   child: InkWell(
@@ -383,6 +394,12 @@ class _TradeDoc1State extends State<TradeDoc1> {
                       ),
                     ),
                   ),
+                  // child: RoundedLoadingButton(
+                  //   color: buttonColor,
+                  //   child: Text('Save', style: TextStyle(color: Colors.white)),
+                  //   controller: _btnController,
+                  //   onPressed: _doSomething,
+                  // ),
                 ),
               ),
             ],

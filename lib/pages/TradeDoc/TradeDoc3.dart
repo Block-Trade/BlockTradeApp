@@ -1,5 +1,5 @@
 import 'package:blocktrad/konstants/color.dart';
-import 'package:currency_pickers/country.dart';
+
 import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -14,21 +14,9 @@ class TradeDoc3 extends StatefulWidget {
 
 class _TradeDoc3State extends State<TradeDoc3> {
 
-  String datpvalue;
-  String paymentValue;
-  String incotermValue;
 
-  Widget _buildDropdownItem(Country country) => Container(
-    child: Row(
-      children: <Widget>[
-        CurrencyPickerUtils.getDefaultFlagImage(country),
-        SizedBox(
-          width: 8.0,
-        ),
-        Text("+${country.currencyCode}(${country.isoCode})"),
-      ],
-    ),
-  );
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -311,143 +299,6 @@ class _TradeDoc3State extends State<TradeDoc3> {
                         fontSize: 14
                     ),
                   ),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Container(
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(5),
-                      border: Border.all(color: greyColor)
-                  ),
-                  child: DropdownButtonFormField(
-                    style: TextStyle(
-                        color: Colors.black,
-                        fontFamily: 'OpenSans',
-                        fontSize: 14
-                    ),
-                    onChanged: (val){
-                      setState(() {
-                        datpvalue=val;
-                      });
-                    },
-                    value: datpvalue,
-                    items: [
-                      DropdownMenuItem(child: Text('Exporter'),value: 'Exporter',),
-                      DropdownMenuItem(child: Text('Importer'),value: 'Importer',),
-                    ],
-                    decoration: InputDecoration(
-                      contentPadding: EdgeInsets.only(left: 10,top: 5),
-                      border: InputBorder.none,
-                      focusedBorder: InputBorder.none,
-                      enabledBorder: InputBorder.none,
-                      errorBorder: InputBorder.none,
-                      disabledBorder: InputBorder.none,
-                      labelText: 'Duty and Taxes Payable by',
-                      labelStyle: TextStyle(color: greyColor,fontFamily: 'OpenSans'),
-                    ),
-                  )
-                ),
-              ),
-              Row(
-                children: [
-                  Expanded(
-                    flex: 1,
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Container(
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(5),
-                              border: Border.all(color: greyColor)
-                          ),
-                          child: DropdownButtonFormField(
-                            style: TextStyle(
-                                color: Colors.black,
-                                fontFamily: 'OpenSans',
-                                fontSize: 14
-                            ),
-                            onChanged: (val){
-                              setState(() {
-                                paymentValue=val;
-                              });
-                            },
-                            value: paymentValue,
-                            items: [
-                              DropdownMenuItem(child: Text('Advanced Tokens'),value: 'Advanced Tokens',),
-                              DropdownMenuItem(child: Text('Assets'),value: 'Assets',),
-                            ],
-                            decoration: InputDecoration(
-                              contentPadding: EdgeInsets.only(left: 10,top: 5),
-                              border: InputBorder.none,
-                              focusedBorder: InputBorder.none,
-                              enabledBorder: InputBorder.none,
-                              errorBorder: InputBorder.none,
-                              disabledBorder: InputBorder.none,
-                              labelText: 'Payment Method',
-                              labelStyle: TextStyle(color: greyColor,fontFamily: 'OpenSans',fontSize: 12),
-                            ),
-                          )
-                      ),
-                    ),
-                  ),
-                  Expanded(
-                    flex: 1,
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Container(
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(5),
-                            border: Border.all(color: greyColor)
-                        ),
-                        child: Padding(
-                          padding: const EdgeInsets.only(left: 5,top: 12,bottom: 12),
-                          child: CurrencyPickerDropdown(
-                            initialValue: 'in',
-                            itemBuilder: _buildDropdownItem,
-                            onValuePicked: (Country country) {
-                              print("${country.name}");
-                            },
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Container(
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(5),
-                        border: Border.all(color: greyColor)
-                    ),
-                    child: DropdownButtonFormField(
-                      style: TextStyle(
-                          color: Colors.black,
-                          fontFamily: 'OpenSans',
-                          fontSize: 14
-                      ),
-                      onChanged: (val){
-                        setState(() {
-                          incotermValue=val;
-                        });
-                      },
-                      value: incotermValue,
-                      items: [
-                        DropdownMenuItem(child: Text('Exporter'),value: 'Exporter',),
-                        DropdownMenuItem(child: Text('Importer'),value: 'Importer',),
-                      ],
-                      decoration: InputDecoration(
-                        contentPadding: EdgeInsets.only(left: 10,top: 5),
-                        border: InputBorder.none,
-                        focusedBorder: InputBorder.none,
-                        enabledBorder: InputBorder.none,
-                        errorBorder: InputBorder.none,
-                        disabledBorder: InputBorder.none,
-                        labelText: 'Delivery Terms (Incoterms):',
-                        labelStyle: TextStyle(color: greyColor,fontFamily: 'OpenSans'),
-                      ),
-                    )
                 ),
               ),
               SizedBox(height: 20,),

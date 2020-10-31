@@ -1,14 +1,25 @@
 import 'dart:async';
-
+import 'package:http/http.dart' as http;
+import 'package:blocktrad/konstants/API.dart';
 import 'package:blocktrad/konstants/color.dart';
 import 'package:currency_pickers/country.dart';
 import 'package:currency_pickers/currency_picker_dropdown.dart';
 import 'package:currency_pickers/utils/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:rounded_loading_button/rounded_loading_button.dart';
-
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 class TradeDoc5 extends StatefulWidget {
+
+  String cUname;
+  String paymentType;
+  String credPeriod;
+  String incoterms;
+
+  TradeDoc5({this.cUname,this.credPeriod,this.paymentType,this.incoterms});
+
+
+
   @override
   _TradeDoc5State createState() => _TradeDoc5State();
 }
@@ -16,15 +27,27 @@ class TradeDoc5 extends StatefulWidget {
 class _TradeDoc5State extends State<TradeDoc5> {
 
 
-
+  String curr;
+  String amt;
   final RoundedLoadingButtonController _btnController = new RoundedLoadingButtonController();
+  final storage=FlutterSecureStorage();
 
 
   void _doSomething() async {
-    Timer(Duration(seconds: 3), () {
+      final String url=tradeUrl;
+      String accToken=await storage.read(key: 'accToken');
+      Map<String,String>header={
+        "token":"$accToken",
+        "Content-Type":"application/json"
+      };
+      String username=await storage.read(key: 'username');
+      String body='{"inco":"${widget.incoterms}","amount":"${curr+amt}","creditPeriod":"${widget.credPeriod}","expUser":"$username","impUser":"${widget.cUname}","paymentType":"${widget.paymentType}"}';
+      http.Response response=await http.post(url,headers: header,body: body);
+      print(response.body);
+      print(response.statusCode);
       _btnController.success();
-    });
   }
+
 
 
   Widget _buildDropdownItem(Country country) => Center(
@@ -43,6 +66,15 @@ class _TradeDoc5State extends State<TradeDoc5> {
     ),
   );
 
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    print(widget.incoterms);
+    print(widget.cUname);
+    // print(widget.invoiceDue);
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -104,6 +136,13 @@ class _TradeDoc5State extends State<TradeDoc5> {
                           itemBuilder: _buildDropdownItem,
                           onValuePicked: (Country country) {
                             print("${country.name}");
+                            print(country.currencyCode);
+                            print(country.currencyName);
+                            print(country.iso3Code);
+                            print(country.isoCode);
+                            setState(() {
+                              curr=country.currencyCode;
+                            });
                           },
                         ),
                       ],
@@ -119,6 +158,7 @@ class _TradeDoc5State extends State<TradeDoc5> {
                       border: Border.all(color: greyColor)
                   ),
                   child: TextFormField(
+                    keyboardType: TextInputType.number,
                     decoration: InputDecoration(
                       contentPadding: EdgeInsets.only(
                           left: 10, top: 5),
@@ -147,6 +187,7 @@ class _TradeDoc5State extends State<TradeDoc5> {
                       border: Border.all(color: greyColor)
                   ),
                   child: TextFormField(
+                    keyboardType: TextInputType.number,
                     decoration: InputDecoration(
                       contentPadding: EdgeInsets.only(
                           left: 10, top: 5),
@@ -175,6 +216,7 @@ class _TradeDoc5State extends State<TradeDoc5> {
                       border: Border.all(color: greyColor)
                   ),
                   child: TextFormField(
+                    keyboardType: TextInputType.number,
                     decoration: InputDecoration(
                       contentPadding: EdgeInsets.only(
                           left: 10, top: 5),
@@ -203,6 +245,7 @@ class _TradeDoc5State extends State<TradeDoc5> {
                       border: Border.all(color: greyColor)
                   ),
                   child: TextFormField(
+                    keyboardType: TextInputType.number,
                     decoration: InputDecoration(
                       contentPadding: EdgeInsets.only(
                           left: 10, top: 5),
@@ -231,6 +274,7 @@ class _TradeDoc5State extends State<TradeDoc5> {
                       border: Border.all(color: greyColor)
                   ),
                   child: TextFormField(
+                    keyboardType: TextInputType.number,
                     decoration: InputDecoration(
                       contentPadding: EdgeInsets.only(
                           left: 10, top: 5),
@@ -259,6 +303,7 @@ class _TradeDoc5State extends State<TradeDoc5> {
                       border: Border.all(color: greyColor)
                   ),
                   child: TextFormField(
+                    keyboardType: TextInputType.number,
                     decoration: InputDecoration(
                       contentPadding: EdgeInsets.only(
                           left: 10, top: 5),
@@ -287,6 +332,7 @@ class _TradeDoc5State extends State<TradeDoc5> {
                       border: Border.all(color: greyColor)
                   ),
                   child: TextFormField(
+                    keyboardType: TextInputType.number,
                     decoration: InputDecoration(
                       contentPadding: EdgeInsets.only(
                           left: 10, top: 5),
@@ -343,6 +389,7 @@ class _TradeDoc5State extends State<TradeDoc5> {
                       border: Border.all(color: greyColor)
                   ),
                   child: TextFormField(
+                    keyboardType: TextInputType.number,
                     decoration: InputDecoration(
                       contentPadding: EdgeInsets.only(
                           left: 10, top: 5),
@@ -371,6 +418,12 @@ class _TradeDoc5State extends State<TradeDoc5> {
                       border: Border.all(color: greyColor)
                   ),
                   child: TextFormField(
+                    onChanged: (val){
+                      setState(() {
+                        amt=val;
+                      });
+                    },
+                    keyboardType: TextInputType.number,
                     decoration: InputDecoration(
                       contentPadding: EdgeInsets.only(
                           left: 10, top: 5),

@@ -41,7 +41,7 @@ class _SearchConsigneeState extends State<SearchConsignee> {
           print(list[i]['username']);
           print(cUname);
           flag=true;
-          Navigator.push(context, MaterialPageRoute(builder: (BuildContext context)=>TradeDoc1()));
+          Navigator.push(context, MaterialPageRoute(builder: (BuildContext context)=>TradeDoc1(cUname: cUname,)));
           break;
           // Navigator.push(context, MaterialPageRoute(builder: (BuildContext context)=>TradeInitiation(userDetails: list[i],)));
         }

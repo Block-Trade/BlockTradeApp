@@ -168,6 +168,8 @@ class _DashboardState extends State<Dashboard> {
         name = decodedResponse['name'];
         username = decodedResponse['username'];
       });
+      await storage.write(key: 'username', value: username);
+      await storage.write(key: 'name', value: name);
       String tradeurl = tradeUrl;
       http.Response response1 = await http.get(tradeurl, headers: headers);
       if (response1.statusCode == 200) {

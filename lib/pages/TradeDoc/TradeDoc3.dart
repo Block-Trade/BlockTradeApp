@@ -8,6 +8,13 @@ import 'package:currency_pickers/currency_pickers.dart';
 import 'TradeDoc4.dart';
 
 class TradeDoc3 extends StatefulWidget {
+
+  String cUname;
+  String paymentType;
+  String credPeriod;
+  String incoterms;
+  TradeDoc3({this.cUname,this.credPeriod,this.paymentType,this.incoterms});
+
   @override
   _TradeDoc3State createState() => _TradeDoc3State();
 }
@@ -308,7 +315,7 @@ class _TradeDoc3State extends State<TradeDoc3> {
                   alignment: Alignment.bottomRight,
                   child: InkWell(
                     onTap: ()async{
-                      Navigator.push(context, MaterialPageRoute(builder: (BuildContext context)=>TradeDoc4()));
+                      Navigator.push(context, MaterialPageRoute(builder: (BuildContext context)=>TradeDoc4(incoterms: widget.incoterms,paymentType: widget.paymentType,cUname: widget.cUname,credPeriod: widget.credPeriod,)));
                     },
                     child: Material(
                       borderRadius: BorderRadius.circular(7),

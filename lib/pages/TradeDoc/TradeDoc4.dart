@@ -4,6 +4,14 @@ import 'package:flutter/material.dart';
 import 'TradeDoc5.dart';
 
 class TradeDoc4 extends StatefulWidget {
+
+  String cUname;
+  String paymentType;
+  String credPeriod;
+  String incoterms;
+  TradeDoc4({this.cUname,this.credPeriod,this.paymentType,this.incoterms});
+
+
   @override
   _TradeDoc4State createState() => _TradeDoc4State();
 }
@@ -547,7 +555,7 @@ class _TradeDoc4State extends State<TradeDoc4> {
                   alignment: Alignment.bottomRight,
                   child: InkWell(
                     onTap: ()async{
-                      Navigator.push(context, MaterialPageRoute(builder: (BuildContext context)=>TradeDoc5()));
+                      Navigator.push(context, MaterialPageRoute(builder: (BuildContext context)=>TradeDoc5(incoterms: widget.incoterms,paymentType: widget.paymentType,cUname: widget.cUname,credPeriod: widget.credPeriod,)));
                     },
                     child: Material(
                       borderRadius: BorderRadius.circular(7),

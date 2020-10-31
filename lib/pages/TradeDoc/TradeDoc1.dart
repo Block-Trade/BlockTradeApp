@@ -7,8 +7,12 @@ import 'package:date_range_picker/date_range_picker.dart' as DateRagePicker;
 import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
 import 'package:intl/intl.dart';
 import 'package:rounded_loading_button/rounded_loading_button.dart';
+import 'package:intl/intl.dart';
 
 class TradeDoc1 extends StatefulWidget {
+
+  String cUname;
+  TradeDoc1({this.cUname});
 
   @override
   _TradeDoc1State createState() => _TradeDoc1State();
@@ -18,7 +22,8 @@ class _TradeDoc1State extends State<TradeDoc1> {
 
   TextEditingController _controller=TextEditingController();
   final RoundedLoadingButtonController _btnController = new RoundedLoadingButtonController();
-
+  String paymentType;
+  String credPeriod;
 
 
   @override
@@ -169,35 +174,41 @@ class _TradeDoc1State extends State<TradeDoc1> {
                   ),
                 ],
               ),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Container(
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(5),
-                      border: Border.all(color: greyColor)
-                  ),
-                  child: DateTimeField(
-                    decoration: InputDecoration(
-                      contentPadding: EdgeInsets.only(left: 10,top: 5),
-                      border: InputBorder.none,
-                      focusedBorder: InputBorder.none,
-                      enabledBorder: InputBorder.none,
-                      errorBorder: InputBorder.none,
-                      disabledBorder: InputBorder.none,
-                      labelText: 'Invoice Due',
-                      labelStyle: TextStyle(color: greyColor,fontFamily: 'OpenSans',fontSize: 14),
-                    ),
-                    format: DateFormat("yyyy-MM-dd"),
-                    onShowPicker: (context, currentValue) {
-                      return showDatePicker(
-                          context: context,
-                          firstDate: DateTime(1900),
-                          initialDate: currentValue ?? DateTime.now(),
-                          lastDate: DateTime(2100));
-                    },
-                  ),
-                ),
-              ),
+              // Padding(
+              //   padding: const EdgeInsets.all(8.0),
+              //   child: Container(
+              //     decoration: BoxDecoration(
+              //         borderRadius: BorderRadius.circular(5),
+              //         border: Border.all(color: greyColor)
+              //     ),
+              //     child: DateTimeField(
+              //       onChanged: (val){
+              //         setState(() {
+              //           invoiceDue=val;
+              //         });
+              //       },
+              //       decoration: InputDecoration(
+              //         contentPadding: EdgeInsets.only(left: 10,top: 5),
+              //         border: InputBorder.none,
+              //         focusedBorder: InputBorder.none,
+              //         enabledBorder: InputBorder.none,
+              //         errorBorder: InputBorder.none,
+              //         disabledBorder: InputBorder.none,
+              //         labelText: 'Invoice Due',
+              //         labelStyle: TextStyle(color: greyColor,fontFamily: 'OpenSans',fontSize: 14),
+              //       ),
+              //       format: DateFormat("yyyy-MM-dd"),
+              //       onShowPicker: (context, currentValue) {
+              //         return showDatePicker(
+              //             context: context,
+              //             firstDate: DateTime(1900),
+              //             initialDate: currentValue ?? DateTime.now(),
+              //             lastDate: DateTime(2100));
+              //       },
+              //     ),
+              //   ),
+              // ),
+
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: Container(
@@ -227,6 +238,74 @@ class _TradeDoc1State extends State<TradeDoc1> {
                   ),
                 ),
               ),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Container(
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(5),
+                        border: Border.all(color: greyColor)
+                    ),
+                    child: DropdownButtonFormField(
+                      style: TextStyle(
+                          color: Colors.black,
+                          fontFamily: 'OpenSans',
+                          fontSize: 14
+                      ),
+                      onChanged: (val){
+                        setState(() {
+                          paymentType=val;
+                        });
+                      },
+                      value: paymentType,
+                      items: [
+                        DropdownMenuItem(child: Text('PA'),value: 'PA',),
+                        DropdownMenuItem(child: Text('PL'),value: 'PL',),
+                      ],
+                      decoration: InputDecoration(
+                        contentPadding: EdgeInsets.only(left: 10,top: 5),
+                        border: InputBorder.none,
+                        focusedBorder: InputBorder.none,
+                        enabledBorder: InputBorder.none,
+                        errorBorder: InputBorder.none,
+                        disabledBorder: InputBorder.none,
+                        labelText: 'Payment Type',
+                        labelStyle: TextStyle(color: greyColor,fontFamily: 'OpenSans'),
+                      ),
+                    )
+                ),
+              ),
+              paymentType=='PA'?Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Container(
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(5),
+                      border: Border.all(color: greyColor)
+                  ),
+                  child: TextFormField(
+                    onChanged: (val){
+                      setState(() {
+                        credPeriod=val;
+                      });
+                    },
+                    keyboardType: TextInputType.number,
+                    decoration: InputDecoration(
+                      contentPadding: EdgeInsets.only(left: 10,top: 5),
+                      border: InputBorder.none,
+                      focusedBorder: InputBorder.none,
+                      enabledBorder: InputBorder.none,
+                      errorBorder: InputBorder.none,
+                      disabledBorder: InputBorder.none,
+                      labelText: 'Credit Period(in days)',
+                      labelStyle: TextStyle(color: greyColor,fontFamily: 'OpenSans'),
+                    ),
+                    style: TextStyle(
+                        color: Colors.black,
+                        fontFamily: 'OpenSans',
+                        fontSize: 14
+                    ),
+                  ),
+                ),
+              ):Container(),
               Row(
                 children: [
                   Expanded(
@@ -374,7 +453,7 @@ class _TradeDoc1State extends State<TradeDoc1> {
                   alignment: Alignment.bottomRight,
                   child: InkWell(
                     onTap: ()async{
-                      Navigator.push(context, MaterialPageRoute(builder: (BuildContext context)=>TradeDoc2()));
+                      Navigator.push(context, MaterialPageRoute(builder: (BuildContext context)=>TradeDoc2(paymentType: paymentType,cUname: widget.cUname,credPeriod: credPeriod,)));
                     },
                     child: Material(
                       borderRadius: BorderRadius.circular(7),

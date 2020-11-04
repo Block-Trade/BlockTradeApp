@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:http/http.dart';
 import 'package:blocktrad/konstants/API.dart';
 import 'package:blocktrad/konstants/color.dart';
 import 'package:blocktrad/konstants/loader.dart';
@@ -11,8 +12,13 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-
+import 'package:percent_indicator/circular_percent_indicator.dart';
+import 'package:percent_indicator/linear_percent_indicator.dart';
 import 'login.dart';
+import 'package:intl/intl.dart';
+import 'package:currency_pickers/countries.dart';
+import 'package:currency_pickers/country.dart';
+import 'package:web3dart/web3dart.dart';
 
 class Dashboard extends StatefulWidget {
   @override
@@ -26,6 +32,22 @@ class _DashboardState extends State<Dashboard> {
   String username;
   bool importer=false;
   bool exporter=false;
+  List trades;
+  Country country;
+  List completedTrades;
+  Map fulForm={
+    "DU":"Document Uploaded",
+    "DV":"Document Verification",
+    "GL":"Goods Laided",
+    "GD":"Goods Delivered",
+    "PD":"Payment Done"
+  };
+  Client httpClient;
+  Web3Client ethClient;
+  final myAddress="0x5A8ed9980C09857eF9F2f186316457935245702c";
+  var myData;
+
+
 
   dialog() {
     showDialog(
@@ -173,9 +195,20 @@ class _DashboardState extends State<Dashboard> {
       String tradeurl = tradeUrl;
       http.Response response1 = await http.get(tradeurl, headers: headers);
       if (response1.statusCode == 200) {
-        setState(() {
-          load = false;
-        });
+        trades=List();
+        completedTrades=List();
+
+          List list=jsonDecode(response1.body)['trades'] as List;
+          for(int i=0;i<list.length;i++){
+            if(list[i]['tradeStatus']=='PD'){
+              completedTrades.add(list[i]);
+            }else{
+              trades.add(list[i]);
+            }
+          }
+          setState(() {
+            load = false;
+          });
       } else {
         Navigator.pushAndRemoveUntil(
             context,
@@ -204,7 +237,7 @@ class _DashboardState extends State<Dashboard> {
             child: spinkit,
             color: Colors.white,
           )
-        : Scaffold(
+        : trades.length==0?Scaffold(
             appBar: AppBar(
               actions: [
                 IconButton(
@@ -297,6 +330,337 @@ class _DashboardState extends State<Dashboard> {
                 )
               ],
             ),
-          );
+          ):Scaffold(
+      appBar:  AppBar(
+        actions: [
+          IconButton(
+            icon: CircleAvatar(
+              child: Icon(
+                Icons.person,
+                color: primaryColor,
+              ),
+              backgroundColor: Colors.white,
+              radius: 12,
+            ),
+            onPressed: () {},
+          )
+        ],
+        centerTitle: true,
+        title: Text(
+          'Dashboard',
+          style:
+          TextStyle(color: Colors.white, fontFamily: 'OpenSansSemi'),
+        ),
+        backgroundColor: primaryColor,
+      ),
+      drawer: SideNavDrawer(
+        a: 1,
+        name: name,
+        username: username,
+      ),
+      body: Center(
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              Column(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.only(left: 20,top: 20),
+                    child: Align(child: Text('Ongoing Trades',style: TextStyle(color: Colors.black, fontFamily: 'OpenSansSemi',fontSize: 18),),alignment: Alignment.topLeft,),
+                  ),
+                 SizedBox(height: 20,),
+                  Padding(
+                    padding: const EdgeInsets.all(5.0),
+                    child: Container(
+                      height: 250,
+                      child: PageView.builder(
+                        pageSnapping: true,
+                        itemBuilder: (BuildContext context,int pos){
+                          country=Country(currencyCode: trades[pos]['amount'].toString().substring(0,3));
+                          print(trades[pos]['amount'].toString().substring(0,3));
+                          print(country.name);
+                          return Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 10),
+                            child: Container(decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(12),
+                              gradient: LinearGradient(
+                                begin: Alignment.topCenter,
+                                end: Alignment.bottomCenter,
+                                colors: [
+                                  Colors.white,
+                                  Color(0xFF3799F3),
+                                ],
+                              )
+                            ),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.only(left: 8,top: 20,right: 8,bottom: 5),
+                                  child: LinearPercentIndicator(
+                                    // maskFilter: MaskFilter.blur(_style, _sigma),
+                                    // width: MediaQuery.of(context
+
+                                    // ).size.width-50,
+                                    restartAnimation: true,
+                                    animation: true,
+                                    animationDuration: 1000,
+                                    lineHeight: 5.0,
+                                    // trailing: Text(fulForm[trades[pos]['tradeStatus']],style: TextStyle(color: Colors.black, fontFamily: 'OpenSansSemi',fontSize: 14),),
+                                    // trailing: new Text("right content"),
+                                    percent: 0.2,
+                                    // center: Text("20.0%",style: TextStyle(color: Colors.red),),
+                                    linearStrokeCap: LinearStrokeCap.round,
+                                    progressColor: primaryColor,
+                                  ),
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Align(child: Text(
+                                    "Status : ${
+                                                    fulForm[trades[pos]
+                                                        ['tradeStatus']]
+                                                  }",style: TextStyle(color: Colors.black, fontFamily: 'OpenSansSemi',fontSize: 14),),alignment: Alignment.bottomRight,),
+                                ),
+                                Divider(color: Colors.grey.shade500,),
+                                Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Row(
+                                    children: [
+                                      Column(
+                                        children: [
+                                          Image.asset('assets/images/importer.png',height: 100,width: 100,),
+                                          SizedBox(height: 10,),
+                                          Text(username==trades[pos]['importerUserName']?trades[pos]['exporterUserName'].toString().toUpperCase():trades[pos]['importerUserName'].toString().toUpperCase(),style: TextStyle(color: Colors.black, fontFamily: 'OpenSansSemi',fontSize: 14),),
+                                        ],
+                                      ),
+                                     Expanded(
+                                       child: Table(
+                                         columnWidths: {
+                                           0:FlexColumnWidth(1),
+                                           1:FlexColumnWidth(2),
+                                         },
+                                         children: [
+                                           TableRow(
+                                             children: [
+                                               Padding(
+                                                 padding: const EdgeInsets.all(8.0),
+                                                 child: Text('Trade ID',style: TextStyle(color: Colors.black, fontFamily: 'OpenSansSemi',fontSize: 14),),
+                                               ),
+
+                                               Padding(
+                                                 padding: const EdgeInsets.all(8.0),
+                                                 child: Text(trades[pos]['TradeId'],overflow: TextOverflow.ellipsis,style: TextStyle(color: Colors.black, fontFamily: 'OpenSansSemi',fontSize: 14),),
+                                               ),
+                                             ]
+                                           ),
+                                           TableRow(
+                                               children: [
+                                                 Padding(
+                                                   padding: const EdgeInsets.all(8.0),
+                                                   child: Text('Status',style: TextStyle(color: Colors.black, fontFamily: 'OpenSansSemi',fontSize: 14),),
+                                                 ),
+                                                 Padding(
+                                                   padding: const EdgeInsets.all(8.0),
+                                                   child: Text(trades[pos]
+                                                   ['tradeStatus'],overflow: TextOverflow.ellipsis,style: TextStyle(color: Colors.black, fontFamily: 'OpenSansSemi',fontSize: 14),),
+                                                 ),
+                                               ]
+                                           ),
+                                           TableRow(
+                                               children: [
+                                                 Padding(
+                                                   padding: const EdgeInsets.all(8.0),
+                                                   child: Text('Invoice Date',style: TextStyle(color: Colors.black, fontFamily: 'OpenSansSemi',fontSize: 14),),
+                                                 ),
+                                                 Padding(
+                                                   padding: const EdgeInsets.all(8.0),
+                                                   child: Text(DateFormat.yMMMEd().format(DateTime.parse(trades[pos]
+                                                   ['invoiceDate'])),overflow: TextOverflow.ellipsis,style: TextStyle(color: Colors.black, fontFamily: 'OpenSansSemi',fontSize: 14),),
+                                                 ),
+                                               ]
+                                           ),
+                                           // TableRow(
+                                           //     children: [
+                                           //       Padding(
+                                           //         padding: const EdgeInsets.all(8.0),
+                                           //         child: Text('Amount',style: TextStyle(color: Colors.black, fontFamily: 'OpenSansSemi',fontSize: 14),),
+                                           //       ),
+                                           //       Padding(
+                                           //         padding: const EdgeInsets.all(8.0),
+                                           //         child: Text((trades[pos]
+                                           //         ['amount']),overflow: TextOverflow.ellipsis,style: TextStyle(color: Colors.black, fontFamily: 'OpenSansSemi',fontSize: 14),),
+                                           //       ),
+                                           //     ]
+                                           // ),
+                                         ],
+                                       ),
+                                     )
+                                    ],
+                                  ),
+                                )
+                              ],
+                            ),
+                            ),
+                          );
+                        },
+                        itemCount: trades.length,
+                        // pageSnapping: false,
+                      ),
+                    ),
+                  ),
+                  SizedBox(height: 30,),
+                  Padding(
+                    padding: const EdgeInsets.only(left: 20),
+                    child: Align(child: Text('Completed Trades',style: TextStyle(color: Colors.black, fontFamily: 'OpenSansSemi',fontSize: 18),),alignment: Alignment.topLeft,),
+                  ),
+                  SizedBox(height: 20,),
+                  Padding(
+                    padding: const EdgeInsets.all(5.0),
+                    child: Container(
+                      height: 250,
+                      child: PageView.builder(
+                        pageSnapping: true,
+                        itemBuilder: (BuildContext context,int pos){
+                          country=Country(currencyCode: completedTrades[pos]['amount'].toString().substring(0,3));
+                          print(completedTrades[pos]['amount'].toString().substring(0,3));
+                          print(country.name);
+                          return Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 10),
+                            child: Container(decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(12),
+                                gradient: LinearGradient(
+                                  begin: Alignment.topCenter,
+                                  end: Alignment.bottomCenter,
+                                  colors: [
+                                    Colors.white,
+                                    Color(0xFF3799F3),
+                                  ],
+                                )
+                            ),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  Padding(
+                                    padding: const EdgeInsets.only(left: 8,top: 20,right: 8,bottom: 5),
+                                    child: LinearPercentIndicator(
+                                      // maskFilter: MaskFilter.blur(_style, _sigma),
+                                      // width: MediaQuery.of(context
+
+                                      // ).size.width-50,
+                                      restartAnimation: true,
+                                      animation: true,
+                                      animationDuration: 1000,
+                                      lineHeight: 5.0,
+                                      // trailing: Text(fulForm[trades[pos]['tradeStatus']],style: TextStyle(color: Colors.black, fontFamily: 'OpenSansSemi',fontSize: 14),),
+                                      // trailing: new Text("right content"),
+                                      percent: 0.2,
+                                      // center: Text("20.0%",style: TextStyle(color: Colors.red),),
+                                      linearStrokeCap: LinearStrokeCap.round,
+                                      progressColor: primaryColor,
+                                    ),
+                                  ),
+                                  Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Align(child: Text(
+                                      "Status : ${
+                                          fulForm[completedTrades[pos]
+                                          ['tradeStatus']]
+                                      }",style: TextStyle(color: Colors.black, fontFamily: 'OpenSansSemi',fontSize: 14),),alignment: Alignment.bottomRight,),
+                                  ),
+                                  Divider(color: Colors.grey.shade500,),
+                                  Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Row(
+                                      children: [
+                                        Column(
+                                          children: [
+                                            Image.asset('assets/images/importer.png',height: 100,width: 100,),
+                                            SizedBox(height: 10,),
+                                            Text(username==completedTrades[pos]['importerUserName']?completedTrades[pos]['exporterUserName'].toString().toUpperCase():completedTrades[pos]['importerUserName'].toString().toUpperCase(),style: TextStyle(color: Colors.black, fontFamily: 'OpenSansSemi',fontSize: 14),),
+                                          ],
+                                        ),
+                                        Expanded(
+                                          child: Table(
+                                            columnWidths: {
+                                              0:FlexColumnWidth(1),
+                                              1:FlexColumnWidth(2),
+                                            },
+                                            children: [
+                                              TableRow(
+                                                  children: [
+                                                    Padding(
+                                                      padding: const EdgeInsets.all(8.0),
+                                                      child: Text('Trade ID',style: TextStyle(color: Colors.black, fontFamily: 'OpenSansSemi',fontSize: 14),),
+                                                    ),
+
+                                                    Padding(
+                                                      padding: const EdgeInsets.all(8.0),
+                                                      child: Text(completedTrades[pos]['TradeId'],overflow: TextOverflow.ellipsis,style: TextStyle(color: Colors.black, fontFamily: 'OpenSansSemi',fontSize: 14),),
+                                                    ),
+                                                  ]
+                                              ),
+                                              TableRow(
+                                                  children: [
+                                                    Padding(
+                                                      padding: const EdgeInsets.all(8.0),
+                                                      child: Text('Status',style: TextStyle(color: Colors.black, fontFamily: 'OpenSansSemi',fontSize: 14),),
+                                                    ),
+                                                    Padding(
+                                                      padding: const EdgeInsets.all(8.0),
+                                                      child: Text(completedTrades[pos]
+                                                      ['tradeStatus'],overflow: TextOverflow.ellipsis,style: TextStyle(color: Colors.black, fontFamily: 'OpenSansSemi',fontSize: 14),),
+                                                    ),
+                                                  ]
+                                              ),
+                                              TableRow(
+                                                  children: [
+                                                    Padding(
+                                                      padding: const EdgeInsets.all(8.0),
+                                                      child: Text('Invoice Date',style: TextStyle(color: Colors.black, fontFamily: 'OpenSansSemi',fontSize: 14),),
+                                                    ),
+                                                    Padding(
+                                                      padding: const EdgeInsets.all(8.0),
+                                                      child: Text(DateFormat.yMMMEd().format(DateTime.parse(completedTrades[pos]
+                                                      ['invoiceDate'])),overflow: TextOverflow.ellipsis,style: TextStyle(color: Colors.black, fontFamily: 'OpenSansSemi',fontSize: 14),),
+                                                    ),
+                                                  ]
+                                              ),
+                                              // TableRow(
+                                              //     children: [
+                                              //       Padding(
+                                              //         padding: const EdgeInsets.all(8.0),
+                                              //         child: Text('Amount',style: TextStyle(color: Colors.black, fontFamily: 'OpenSansSemi',fontSize: 14),),
+                                              //       ),
+                                              //       Padding(
+                                              //         padding: const EdgeInsets.all(8.0),
+                                              //         child: Text((trades[pos]
+                                              //         ['amount']),overflow: TextOverflow.ellipsis,style: TextStyle(color: Colors.black, fontFamily: 'OpenSansSemi',fontSize: 14),),
+                                              //       ),
+                                              //     ]
+                                              // ),
+                                            ],
+                                          ),
+                                        )
+                                      ],
+                                    ),
+                                  )
+                                ],
+                              ),
+                            ),
+                          );
+                        },
+                        itemCount: completedTrades.length,
+                        // pageSnapping: false,
+                      ),
+                    ),
+                  )
+                ],
+              )
+            ],
+          ),
+        ),
+      ),
+    );
   }
 }

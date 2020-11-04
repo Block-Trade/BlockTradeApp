@@ -8,8 +8,9 @@ class TradeDoc2 extends StatefulWidget {
   String cUname;
   String paymentType;
   String credPeriod;
+  String invoiceDate;
 
-  TradeDoc2({this.cUname,this.credPeriod,this.paymentType});
+  TradeDoc2({this.cUname,this.credPeriod,this.paymentType,this.invoiceDate});
 
   @override
   _TradeDoc2State createState() => _TradeDoc2State();
@@ -366,7 +367,7 @@ class _TradeDoc2State extends State<TradeDoc2> {
                   alignment: Alignment.bottomRight,
                   child: InkWell(
                     onTap: ()async{
-                      Navigator.push(context, MaterialPageRoute(builder: (BuildContext context)=>TradeDoc3(incoterms: incotermValue,paymentType: widget.paymentType,cUname: widget.cUname,credPeriod: widget.credPeriod,)));
+                      Navigator.push(context, MaterialPageRoute(builder: (BuildContext context)=>TradeDoc3(incoterms: incotermValue,paymentType: widget.paymentType,cUname: widget.cUname,credPeriod: widget.credPeriod,invoiceDate: widget.invoiceDate,)));
                     },
                     child: Material(
                       borderRadius: BorderRadius.circular(7),

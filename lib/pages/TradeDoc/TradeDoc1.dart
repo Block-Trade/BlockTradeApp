@@ -23,8 +23,8 @@ class _TradeDoc1State extends State<TradeDoc1> {
   TextEditingController _controller=TextEditingController();
   final RoundedLoadingButtonController _btnController = new RoundedLoadingButtonController();
   String paymentType;
-  String credPeriod;
-
+  String credPeriod='0';
+  DateTime invoiceDate;
 
   @override
   void initState() {
@@ -150,6 +150,11 @@ class _TradeDoc1State extends State<TradeDoc1> {
                             border: Border.all(color: greyColor)
                         ),
                         child: DateTimeField(
+                          onChanged: (val){
+                            setState(() {
+                              invoiceDate=val;
+                            });
+                          },
                           decoration: InputDecoration(
                             contentPadding: EdgeInsets.only(left: 10,top: 5),
                             border: InputBorder.none,
@@ -453,7 +458,7 @@ class _TradeDoc1State extends State<TradeDoc1> {
                   alignment: Alignment.bottomRight,
                   child: InkWell(
                     onTap: ()async{
-                      Navigator.push(context, MaterialPageRoute(builder: (BuildContext context)=>TradeDoc2(paymentType: paymentType,cUname: widget.cUname,credPeriod: credPeriod,)));
+                      Navigator.push(context, MaterialPageRoute(builder: (BuildContext context)=>TradeDoc2(paymentType: paymentType,cUname: widget.cUname,credPeriod: credPeriod,invoiceDate: DateFormat('yyyy-MM-dd').format(invoiceDate),)));
                     },
                     child: Material(
                       borderRadius: BorderRadius.circular(7),

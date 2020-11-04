@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:blocktrad/pages/Dashboard.dart';
 import 'package:http/http.dart' as http;
 import 'package:blocktrad/konstants/API.dart';
 import 'package:blocktrad/konstants/color.dart';
@@ -15,8 +16,9 @@ class TradeDoc5 extends StatefulWidget {
   String paymentType;
   String credPeriod;
   String incoterms;
+  String invoiceDate;
 
-  TradeDoc5({this.cUname,this.credPeriod,this.paymentType,this.incoterms});
+  TradeDoc5({this.cUname,this.credPeriod='0',this.paymentType,this.incoterms,this.invoiceDate});
 
 
 
@@ -41,11 +43,17 @@ class _TradeDoc5State extends State<TradeDoc5> {
         "Content-Type":"application/json"
       };
       String username=await storage.read(key: 'username');
-      String body='{"inco":"${widget.incoterms}","amount":"${curr+amt}","creditPeriod":"${widget.credPeriod}","expUser":"$username","impUser":"${widget.cUname}","paymentType":"${widget.paymentType}"}';
+      String body='{"inco":"${widget.incoterms}","amount":"${curr+amt}","creditPeriod":"${widget.credPeriod}","expUser":"$username","impUser":"${widget.cUname}","paymentType":"${widget.paymentType}","invoiceDate":"${widget.invoiceDate}"}';
       http.Response response=await http.post(url,headers: header,body: body);
+      print(body);
       print(response.body);
       print(response.statusCode);
+      if(response.statusCode==200){
       _btnController.success();
+      Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (BuildContext context)=>Dashboard()), (route) => false);
+      }else{
+        _btnController.error();
+      }
   }
 
 
